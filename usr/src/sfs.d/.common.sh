@@ -1,3 +1,6 @@
+: ${lbu:=/opt/LiveBootUtils}
+. "$lbu/scripts/common.func"
+
 latest_ver() {
   curl -s "https://download.documentfoundation.org/libreoffice/stable/?C=M;O=D" | grep -o 'href="[0-9][^"/]*' | cut -f2 -d'"' | head -1
 }
