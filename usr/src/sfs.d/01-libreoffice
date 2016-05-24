@@ -13,8 +13,8 @@ echo -n "Extracting deb files from tar .. "
 tar xfz $deb_tgz --strip-components=2 --wildcards -C "$tmp_d" "*.deb"
 echo "ok."
 echo -n "Extracting deb files to $DESTDIR .. "
-find "$tmp_d" -name "*.deb" \
-  -exec sh -c '. /opt/LiveBootUtils/scripts/common.func; unpack_deb "$DESTDIR" "$@"' a {} +
+env lbu="$lbu" find "$tmp_d" -name "*.deb" \
+  -exec sh -c '. "$lbu/scripts/common.func"; unpack_deb "$DESTDIR" "$@"' a {} +
 echo "ok."
 
 echo -n "Fixing permissions .. "
