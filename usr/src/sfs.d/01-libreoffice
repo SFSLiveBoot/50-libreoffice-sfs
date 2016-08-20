@@ -1,0 +1,26 @@
+#!/bin/sh
+
+. /opt/LiveBootUtils/scripts/common.func
+. "$(dirname "$0")/.common.sh"
+
+echo -n "Getting latest version .. "
+: ${deb_tgz:=$(dl_file "$(gen_dl_url)")}
+echo "ok."
+
+tmp_d=$(mktemp -d)
+trap 'rm -r "$tmp_d"' EXIT
+set -e
+echo -n "Extracting deb files from tar .. "
+tar xfz $deb_tgz --strip-components=2 --wildcards -C $tmp_d "*.deb"
+echo "ok."
+echo -n "Extracting deb files to \$DESTDIR .. "
+find "$tmp_d" -name "*.deb" -exec sh -c '. /opt/LiveBootUtils/scripts/common.func; unpack_deb "$DESTDIR" "$@"' a {} +
+echo "ok."
+
+echo -n "Fixing permissions .. "
+chmod g-w -R "$DESTDIR"
+echo "ok."
+
+echo -n "updating links .. "
+find "$DESTDIR/opt" -maxdepth 1 -name "libreoffice[0-9]*" -exec sh -c 'test -L "$DESTDIR/opt/libreoffice" || ln -vs "${1##*/}" "$DESTDIR/opt/libreoffice"' a {} +
+echo "ok."
