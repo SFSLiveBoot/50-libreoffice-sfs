@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+. "$(dirname "$0")/.common.sh"
+
+: "${latest_ver:=$(latest_ver)}"
+: "${current_ver:=$(current_ver)}"
+
+test "x$latest_ver" = "x$current_ver" || {
+    echo "Current version $current_ver is not latest: $latest_ver" >&2
+    exit 1
+}
